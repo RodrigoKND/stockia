@@ -26,27 +26,27 @@ Products can be shared through links and viewed as a public catalog, allowing bu
 
 ---
 
-## 📦 Project Status
+## Project Status
 
 This project is currently in **MVP stage**.  
 Features and structure may change as the product evolves and user feedback is collected.
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License**.  
 You are free to use, modify, and distribute this software, including for commercial purposes.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome!  
 If you want to improve Stockia or propose new features, feel free to open an issue or submit a pull request.
 
 ---
 
-## 📬 Contact
+## Contact
 
 If you are interested in using Stockia or collaborating on the project, feel free to reach out or open a discussion in this repository.
