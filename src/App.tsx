@@ -5,6 +5,7 @@ import PublisherProducts from './components/PublisherProducts';
 import SharedView from './components/SharedView';
 import Login from './components/Login';
 
+// TODO: Cambiar las rutas relativas por @ para mayor flexibilidad en el futuro
 function App() {
 
   return (
