@@ -5,99 +5,99 @@ interface Faqs {
 
 export const faqs: Faqs[] = [
   {
-    "question": "What is automatic inventory from photos?",
-    "answer": "It is a system that analyzes photos of your products and automatically generates an editable inventory list, saving you time and reducing manual errors."
+    "question": "¿Qué es el inventario automático desde fotos?",
+    "answer": "Es un sistema que analiza fotos de tus productos y genera automáticamente una lista de inventario editable, ahorrándote tiempo y reduciendo errores manuales."
   },
   {
-    "question": "How does the system work?",
-    "answer": "You upload photos of your products, the system analyzes them using AI, extracts product information, and generates an inventory that you can edit and export."
+    "question": "¿Cómo funciona el sistema?",
+    "answer": "Subes fotos de tus productos, el sistema las analiza usando IA, extrae la información de los productos y genera un inventario que puedes editar y exportar."
   },
   {
-    "question": "Do I need barcodes or scanners?",
-    "answer": "No. The system works only with photos. No barcodes, scanners, or special hardware are required."
+    "question": "¿Necesito códigos de barras o escáneres?",
+    "answer": "No. El sistema funciona únicamente con fotos. No se requieren códigos de barras, escáneres ni hardware especial."
   },
   {
-    "question": "What kind of businesses is this for?",
-    "answer": "It is designed for small and medium businesses such as retail stores, warehouses, e-commerce sellers, pharmacies, and distributors."
+    "question": "¿Para qué tipo de negocios es esto?",
+    "answer": "Está diseñado para pequeñas y medianas empresas como tiendas minoristas, almacenes, vendedores de comercio electrónico, farmacias y distribuidores."
   },
   {
-    "question": "How accurate is the inventory detection?",
-    "answer": "Accuracy depends on photo quality, but the system always allows manual editing so you stay in full control of your inventory."
+    "question": "¿Qué tan precisa es la detección del inventario?",
+    "answer": "La precisión depende de la calidad de la foto, pero el sistema siempre permite edición manual para que mantengas control total de tu inventario."
   },
   {
-    "question": "Can I edit the inventory after it is generated?",
-    "answer": "Yes. All detected products, quantities, and categories can be edited before saving or exporting."
+    "question": "¿Puedo editar el inventario después de generarlo?",
+    "answer": "Sí. Todos los productos detectados, cantidades y categorías pueden editarse antes de guardar o exportar."
   },
   {
-    "question": "What happens if the AI makes a mistake?",
-    "answer": "You can manually correct any item. The system is designed to assist you, not replace your control."
+    "question": "¿Qué pasa si la IA comete un error?",
+    "answer": "Puedes corregir manualmente cualquier artículo. El sistema está diseñado para asistirte, no reemplazar tu control."
   },
   {
-    "question": "Are my product photos stored?",
-    "answer": "No. Photos are used only for analysis and are not permanently stored, ensuring privacy and faster processing."
+    "question": "¿Se almacenan las fotos de mis productos?",
+    "answer": "No. Las fotos se usan solo para análisis y no se almacenan permanentemente, garantizando privacidad y procesamiento más rápido."
   },
   {
-    "question": "Where do the product images shown in the app come from?",
-    "answer": "Reference images are fetched from public internet sources based on the detected product name and brand, and are used only for visual reference."
+    "question": "¿De dónde vienen las imágenes de productos mostradas en la app?",
+    "answer": "Las imágenes de referencia se obtienen de fuentes públicas de internet basándose en el nombre y marca del producto detectado, y se usan solo como referencia visual."
   },
   {
-    "question": "Is this a subscription?",
-    "answer": "No. This is a one-time payment that gives you access to the tool and a defined number of inventory analyses."
+    "question": "¿Es esto una suscripción?",
+    "answer": "No. Es un pago único que te da acceso a la herramienta y un número definido de análisis de inventario."
   },
   {
-    "question": "Can I export my inventory?",
-    "answer": "Yes. You can export your inventory as a CSV file compatible with Excel, Google Sheets, and most inventory systems."
+    "question": "¿Puedo exportar mi inventario?",
+    "answer": "Sí. Puedes exportar tu inventario como archivo CSV compatible con Excel, Google Sheets y la mayoría de sistemas de inventario."
   },
   {
-    "question": "Does this replace my current inventory system?",
-    "answer": "No. It complements your current system by speeding up data entry and reducing manual work."
+    "question": "¿Esto reemplaza mi sistema de inventario actual?",
+    "answer": "No. Complementa tu sistema actual acelerando la entrada de datos y reduciendo el trabajo manual."
   },
   {
-    "question": "What languages does the app support?",
-    "answer": "The app supports English and Spanish, with more languages planned based on demand."
+    "question": "¿Qué idiomas soporta la aplicación?",
+    "answer": "La aplicación soporta inglés y español, con más idiomas planificados según la demanda."
   },
   {
-    "question": "Do I need technical knowledge to use it?",
-    "answer": "No. The interface is designed to be simple and intuitive for non-technical users."
+    "question": "¿Necesito conocimientos técnicos para usarla?",
+    "answer": "No. La interfaz está diseñada para ser simple e intuitiva para usuarios no técnicos."
   },
   {
-    "question": "How long does it take to generate an inventory?",
-    "answer": "In most cases, it takes only a few seconds after uploading the photos."
+    "question": "¿Cuánto tiempo toma generar un inventario?",
+    "answer": "En la mayoría de casos, toma solo unos segundos después de subir las fotos."
   },
   {
-    "question": "Is my data secure?",
-    "answer": "Yes. User data is securely stored and access-controlled using modern authentication and security practices."
+    "question": "¿Mis datos están seguros?",
+    "answer": "Sí. Los datos de usuarios se almacenan de forma segura y con control de acceso usando prácticas modernas de autenticación y seguridad."
   },
   {
-    "question": "Can I use this on my phone?",
-    "answer": "Yes. The web app works on mobile devices, tablets, and desktop browsers."
+    "question": "¿Puedo usar esto en mi teléfono?",
+    "answer": "Sí. La aplicación web funciona en dispositivos móviles, tabletas y navegadores de escritorio."
   },
   {
-    "question": "What happens when I reach my usage limit?",
-    "answer": "You will be notified and offered the option to upgrade or purchase additional usage."
+    "question": "¿Qué pasa cuando alcance mi límite de uso?",
+    "answer": "Recibirás una notificación y se te ofrecerá la opción de actualizar o comprar uso adicional."
   },
   {
-    "question": "Can I try it before paying?",
-    "answer": "Early access users are offered limited trials or demos depending on availability."
+    "question": "¿Puedo probarlo antes de pagar?",
+    "answer": "Los usuarios de acceso anticipado reciben pruebas limitadas o demos según disponibilidad."
   },
   {
-    "question": "Is customer support included?",
-    "answer": "Yes. Basic support is included to help you get started and resolve common issues."
+    "question": "¿Incluye soporte al cliente?",
+    "answer": "Sí. Se incluye soporte básico para ayudarte a comenzar y resolver problemas comunes."
   },
   {
-    "question": "Does this work for all product types?",
-    "answer": "It works best with packaged or clearly visible products. Performance may vary for bulk or unlabelled items."
+    "question": "¿Funciona para todos los tipos de productos?",
+    "answer": "Funciona mejor con productos empaquetados o claramente visibles. El rendimiento puede variar para artículos a granel o sin etiqueta."
   },
   {
-    "question": "Will this work for large inventories?",
-    "answer": "Yes, but this version is optimized for small to medium inventories. Larger volumes may require additional processing."
+    "question": "¿Funcionará para inventarios grandes?",
+    "answer": "Sí, pero esta versión está optimizada para inventarios pequeños y medianos. Volúmenes mayores pueden requerir procesamiento adicional."
   },
   {
-    "question": "Is this legal to use with product images?",
-    "answer": "Yes. User-uploaded images are processed with consent, and reference images are used only for visual identification purposes."
+    "question": "¿Es legal usar esto con imágenes de productos?",
+    "answer": "Sí. Las imágenes subidas por usuarios se procesan con consentimiento, y las imágenes de referencia se usan solo para propósitos de identificación visual."
   },
   {
-    "question": "Why is this better than manual inventory?",
-    "answer": "It significantly reduces time, minimizes human error, and allows faster inventory updates without repetitive manual work."
+    "question": "¿Por qué es mejor que el inventario manual?",
+    "answer": "Reduce significativamente el tiempo, minimiza el error humano y permite actualizaciones de inventario más rápidas sin trabajo manual repetitivo."
   }
 ]

@@ -71,7 +71,7 @@ export default function LandingPage() {
             to="/login"
             className="px-6 py-2.5 bg-black text-white rounded-lg font-medium hover:bg-neutral-800 transition-all"
           >
-            Get Started
+            Comenzar
           </Link>
         </div>
       </header>
@@ -81,32 +81,32 @@ export default function LandingPage() {
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <div className="space-y-8 animate-fade-in-up">
             <h1 className="text-6xl md:text-7xl font-bold text-neutral-900 leading-[1.1] tracking-tight">
-              Turn product <span className="text-blue-500">photos</span> into clean <span className="text-blue-500">inventory</span>
+              Convierte <span className="text-blue-500">fotos</span> de productos en <span className="text-blue-500">inventario</span> limpio
             </h1>
             <p className="text-xl text-neutral-600 leading-relaxed max-w-lg">
-              Upload a photo of your stock and let our AI count, categorize, and export your physical stock into an editable spreadsheet instantly.
+              Sube una foto de tu stock y deja que nuestra IA cuente, categorice y exporte tu inventario físico a una hoja de cálculo editable al instante.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Link
                 to="/dashboard"
                 className="px-8 py-4 bg-black text-white rounded-xl font-semibold hover:bg-neutral-800 transition-all text-center"
               > 
-                Upload Photos & Try Beta
+                Sube Fotos y Prueba la Beta
               </Link>
             </div>
             <div className="flex items-center gap-8 text-sm text-neutral-500 pt-4">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="font-medium">99% Accuracy</span>
+                <span className="font-medium">99% de Precisión</span>
               </div>
-              <span>Your inventory is most simple</span>
+              <span>Tu inventario más simple</span>
             </div>
           </div>
           <div className="relative animate-fade-in" style={{ animationDelay: '0.2s', opacity: 0 }}>
             <div className="absolute inset-0 bg-gradient-to-br from-neutral-900/5 to-transparent rounded-3xl"></div>
             <img
               src="https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=1200"
-              alt="Warehouse inventory"
+              alt="Inventario de almacén"
               className="rounded-3xl shadow-2xl w-full"
             />
           </div>
@@ -118,10 +118,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="text-center mb-20 max-w-2xl mx-auto">
             <h2 className="text-5xl font-bold text-neutral-900 mb-6 tracking-tight">
-              Streamlined Inventory Management
+              Gestión de Inventario Simplificada
             </h2>
             <p className="text-lg text-neutral-600">
-              Go from messy shelves to organized data in three simple steps.
+              Pasa de estantes desordenados a datos organizados en tres simples pasos.
             </p>
           </div>
 
@@ -129,18 +129,18 @@ export default function LandingPage() {
             {[
               {
                 icon: Camera,
-                title: '1. Snap',
-                description: 'Use your phone to upload the image of your warehouse shelves directly to the platform.'
+                title: '1. Captura',
+                description: 'Usa tu teléfono para subir la imagen de los estantes de tu almacén directamente a la plataforma.'
               },
               {
                 icon: Sparkles,
-                title: '2. Process',
-                description: 'AI identifies items, counts quantities, and labels items automatically in seconds.'
+                title: '2. Procesa',
+                description: 'La IA identifica artículos, cuenta cantidades y etiqueta productos automáticamente en segundos.'
               },
               {
                 icon: FileSpreadsheet,
-                title: '3. Export',
-                description: 'Review, edit, and download to CSV, XLSX and PDF format. Plug it directly into your ERP system.'
+                title: '3. Exporta',
+                description: 'Revisa, edita y descarga en formato CSV, XLSX y PDF. Conéctalo directamente a tu sistema ERP.'
               }
             ].map((step, index) => (
               <div 
@@ -164,10 +164,10 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-6 lg:px-12">
           <div className="text-center mb-16 max-w-2xl mx-auto">
             <h2 className="text-5xl font-bold text-neutral-900 mb-6 tracking-tight">
-              Powerful Dashboard
+              Panel Potente
             </h2>
             <p className="text-lg text-neutral-600">
-              Review detected items with bounding boxes and edit the resulting data table line-by-line.
+              Revisa los artículos detectados con cajas delimitadoras y edita la tabla de datos resultante línea por línea.
             </p>
           </div>
 
@@ -180,7 +180,7 @@ export default function LandingPage() {
             <div className="relative">
               <img
                 src="https://images.pexels.com/photos/7679454/pexels-photo-7679454.jpeg?auto=compress&cs=tinysrgb&w=1200"
-                alt="Dashboard preview"
+                alt="Vista previa del panel"
                 className="w-full h-96 object-cover bg-neutral-100"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
@@ -190,7 +190,7 @@ export default function LandingPage() {
                 to="/dashboard"
                 className="px-8 py-3 bg-white text-neutral-900 rounded-xl font-semibold hover:bg-neutral-100 transition-all shadow-xl"
               >
-                Open CSV
+                Abrir CSV
               </Link>
             </div>
           </div>
@@ -201,10 +201,10 @@ export default function LandingPage() {
       <section className="py-24 bg-white border-y border-neutral-200">
         <div className="max-w-4xl mx-auto px-6 lg:px-12 text-center">
           <h2 className="text-5xl font-bold text-neutral-900 mb-6 tracking-tight">
-            Because your time does matter
+            Porque tu tiempo sí importa
           </h2>
           <p className="text-xl text-neutral-600 mb-10">
-            Don't waste time registering each product
+            No pierdas tiempo registrando cada producto
           </p>
           <a 
             href='mailto:rodrigopacheco965@gmail.com'
@@ -213,7 +213,7 @@ export default function LandingPage() {
             data-testid="get-a-demo-button"
             className="inline-block px-12 py-4 bg-black text-white rounded-xl font-semibold hover:bg-neutral-800 transition-all text-lg"
           >
-            Get a Demo
+            Solicitar una Demo
           </a>
         </div>
       </section>
@@ -222,7 +222,7 @@ export default function LandingPage() {
       <section className="py-24 bg-neutral-50">
         <div className="max-w-3xl mx-auto px-6 lg:px-12">
           <h2 className="text-5xl font-bold text-neutral-900 mb-16 text-center tracking-tight">
-            Frequently Asked Questions
+            Preguntas Frecuentes
           </h2>
 
           <div className="space-y-4">
@@ -243,7 +243,7 @@ export default function LandingPage() {
                 className="text-neutral-900 font-semibold hover:text-neutral-600 transition-colors underline underline-offset-4" 
                 onClick={showFaqs}
               >
-                {faqsQuantity.final >= faqs.length ? 'Show less' : 'Show more'}
+                {faqsQuantity.final >= faqs.length ? 'Mostrar menos' : 'Mostrar más'}
               </button>
             </div>
           </div>
@@ -262,18 +262,18 @@ export default function LandingPage() {
             </div>
             <div className="flex gap-10 text-sm text-neutral-600">
               <a href="#" className="hover:text-neutral-900 transition-colors font-medium">
-                Privacy Policy
+                Política de Privacidad
               </a>
               <a href="#" className="hover:text-neutral-900 transition-colors font-medium">
-                Terms of Service
+                Términos de Servicio
               </a>
               <a href="mailto:rodrigopacheco965@gmail.com" className="hover:text-neutral-900 transition-colors font-medium">
-                Contact Support
+                Soporte
               </a>
             </div>
           </div>
           <div className="mt-12 text-center text-sm text-neutral-500">
-            © {new Date().getFullYear()} STOCKIA. All rights reserved.
+            © {new Date().getFullYear()} STOCKIA. Todos los derechos reservados.
           </div>
         </div>
       </footer>
