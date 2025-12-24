@@ -1,14 +1,50 @@
 import { LayoutDashboard, Camera, Users, LogOut } from 'lucide-react';
-import { Link, useLocation, useNavigate} from "react-router-dom";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
+
+interface UserProfile {
+  name: string;
+  email: string;
+  avatar?: string;
+}
 
 export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
-  const handleSignOut = () => {
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        setUserProfile({
+          name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario',
+          email: user.email || '',
+          avatar: user.user_metadata?.avatar_url
+        });
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  const handleSignOut = async () => {
     if (confirm('¿Estás seguro de cerrar sesión?')) {
+      await supabase.auth.signOut();
       navigate('/');
     }
+  };
+
+  // Obtener las iniciales del nombre
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   return (
@@ -58,14 +94,32 @@ export default function Sidebar() {
           <LogOut className="w-5 h-5" />
           Sign Out
         </button>
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
-          <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-            <span className="text-white font-semibold text-sm">AM</span>
+        
+        {userProfile && (
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
+            {userProfile.avatar ? (
+              <img
+                src={userProfile.avatar}
+                alt={userProfile.name}
+                className="w-10 h-10 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                <span className="text-white font-semibold text-sm">
+                  {getInitials(userProfile.name)}
+                </span>
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-gray-900 text-sm truncate">
+                {userProfile.name}
+              </div>
+              <div className="text-xs text-gray-500 truncate">
+                {userProfile.email}
+              </div>
+            </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="font-medium text-gray-900 text-sm truncate">Alex Morgan</div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Download, Sparkles, X, AlertCircle, Crown, Edit2, Trash2 } from 'lucide-react';
 import Sidebar from './Sidebar';
 import UploadArea from './UploadArea';
+import { supabase } from '../lib/supabase';
 
 export interface InventoryItem {
   id: string;
@@ -34,24 +35,182 @@ export default function Dashboard() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [currentAnalysis, setCurrentAnalysis] = useState<InventoryItem | null>(null);
   const [showBarcodeScanner, setShowBarcodeScanner] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const scannerRef = useRef<any>(null);
 
   const [credits, setCredits] = useState<CreditInfo>({
     used: 0,
-    total: 5,
-    isRegistered: false
+    total: 10,
+    isRegistered: true
   });
 
+  // Obtener usuario y cargar datos
   useEffect(() => {
-    const savedCredits = localStorage.getItem('stockia_credits');
-    if (savedCredits) {
-      setCredits(JSON.parse(savedCredits));
-    }
+    const initUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+        await loadUserCredits(user.id);
+        await loadInventoryItems(user.id);
+      }
+    };
+    initUser();
   }, []);
 
-  const saveCredits = (newCredits: CreditInfo) => {
-    setCredits(newCredits);
-    localStorage.setItem('stockia_credits', JSON.stringify(newCredits));
+  // Cargar créditos del usuario desde Supabase
+  const loadUserCredits = async (uid: string) => {
+    const { data, error } = await supabase
+      .from('user_credits')
+      .select('*')
+      .eq('user_id', uid)
+      .single();
+
+    if (error) {
+      console.error('Error cargando créditos:', error);
+      return;
+    }
+
+    if (data) {
+      setCredits({
+        used: data.used,
+        total: data.total,
+        isRegistered: data.is_registered
+      });
+    }
+  };
+
+  // Cargar items del inventario desde Supabase
+  const loadInventoryItems = async (uid: string) => {
+    const { data, error } = await supabase
+      .from('inventory_items')
+      .select('*')
+      .eq('user_id', uid)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error cargando items:', error);
+      return;
+    }
+
+    if (data) {
+      const formattedItems: InventoryItem[] = data.map(item => ({
+        id: item.id,
+        imageUrl: item.image_url || '',
+        productName: item.product_name,
+        brand: item.brand || 'N/A',
+        barcode: item.barcode || 'No detectado',
+        price: item.price || 'No visible',
+        category: item.category || 'Sin categoría',
+        quantity: item.quantity || 1,
+        description: item.description || 'Sin descripción',
+        characteristics: item.characteristics || 'Sin características',
+        targetMarket: item.target_market || 'General',
+        usage: item.usage || 'Uso general',
+        confidence: item.confidence || 85,
+        verifiedImage: item.verified_image || undefined
+      }));
+      setItems(formattedItems);
+    }
+  };
+
+  // Actualizar créditos en Supabase
+  const updateCredits = async (newCredits: CreditInfo) => {
+    if (!userId) return;
+
+    const { error } = await supabase
+      .from('user_credits')
+      .update({
+        used: newCredits.used,
+        total: newCredits.total,
+        is_registered: newCredits.isRegistered
+      })
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('Error actualizando créditos:', error);
+    } else {
+      setCredits(newCredits);
+    }
+  };
+
+  // Guardar item en Supabase
+  const saveItemToDatabase = async (item: InventoryItem) => {
+    if (!userId) return;
+
+    const { data, error } = await supabase
+      .from('inventory_items')
+      .insert({
+        id: item.id,
+        user_id: userId,
+        product_name: item.productName,
+        brand: item.brand,
+        barcode: item.barcode,
+        price: item.price,
+        category: item.category,
+        quantity: item.quantity,
+        description: item.description,
+        characteristics: item.characteristics,
+        target_market: item.targetMarket,
+        usage: item.usage,
+        confidence: item.confidence,
+        image_url: item.imageUrl,
+        verified_image: item.verifiedImage
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error guardando item:', error);
+      throw error;
+    }
+
+    return data;
+  };
+
+  // Actualizar item en Supabase
+  const updateItemInDatabase = async (item: InventoryItem) => {
+    if (!userId) return;
+
+    const { error } = await supabase
+      .from('inventory_items')
+      .update({
+        product_name: item.productName,
+        brand: item.brand,
+        barcode: item.barcode,
+        price: item.price,
+        category: item.category,
+        quantity: item.quantity,
+        description: item.description,
+        characteristics: item.characteristics,
+        target_market: item.targetMarket,
+        usage: item.usage,
+        confidence: item.confidence,
+        image_url: item.imageUrl,
+        verified_image: item.verifiedImage
+      })
+      .eq('id', item.id)
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('Error actualizando item:', error);
+      throw error;
+    }
+  };
+
+  // Eliminar item de Supabase
+  const deleteItemFromDatabase = async (itemId: string) => {
+    if (!userId) return;
+
+    const { error } = await supabase
+      .from('inventory_items')
+      .delete()
+      .eq('id', itemId)
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('Error eliminando item:', error);
+      throw error;
+    }
   };
 
   const startBarcodeScanner = async () => {
@@ -136,7 +295,6 @@ export default function Dashboard() {
 
       const text = data.candidates[0].content.parts[0].text;
 
-      // Extraer JSON del texto
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (!jsonMatch) {
         console.error('Respuesta de Gemini sin JSON:', text);
@@ -202,13 +360,11 @@ Proporciona la siguiente información en formato JSON válido:
 
 Responde ÚNICAMENTE con el objeto JSON, sin texto adicional antes o después.`;
 
-      // CAMBIO: No pasar imagen aquí porque el scanner solo da el código
       const analysis = await analyzeWithGemini(prompt);
-
       const verifiedImageUrl = await searchImageOnWeb(`${barcode} product`);
 
       const newItem: InventoryItem = {
-        id: Date.now().toString(),
+        id: crypto.randomUUID(),
         imageUrl: verifiedImageUrl,
         productName: analysis.productName || 'Producto desconocido',
         brand: analysis.brand || 'N/A',
@@ -228,7 +384,7 @@ Responde ÚNICAMENTE con el objeto JSON, sin texto adicional antes o después.`;
       setShowConfirmModal(true);
 
       const newCredits = { ...credits, used: credits.used + 1 };
-      saveCredits(newCredits);
+      await updateCredits(newCredits);
 
       if (newCredits.used === newCredits.total) {
         setTimeout(() => {
@@ -288,8 +444,6 @@ Responde ÚNICAMENTE con el objeto JSON válido, sin texto adicional.`;
 
         const analysis = await analyzeWithGemini(prompt, base64Image);
 
-        console.log('Análisis recibido:', analysis); // DEBUG: ver qué devuelve Gemini
-
         let verifiedImageUrl = '';
         if (analysis.productName && analysis.productName !== 'Producto desconocido') {
           let searchQuery = '';
@@ -304,11 +458,11 @@ Responde ÚNICAMENTE con el objeto JSON válido, sin texto adicional.`;
         }
 
         const newItem: InventoryItem = {
-          id: Date.now().toString(),
+          id: crypto.randomUUID(),
           imageUrl: verifiedImageUrl || reader.result as string,
           productName: analysis.productName || 'Producto desconocido',
           brand: analysis.brand || 'N/A',
-          barcode: analysis.barcode || 'No detectado', // ASEGURAR que siempre tenga valor
+          barcode: analysis.barcode || 'No detectado',
           price: analysis.price || 'No visible',
           category: analysis.category || 'Sin categoría',
           quantity: typeof analysis.quantity === 'number' ? analysis.quantity : 1,
@@ -320,13 +474,11 @@ Responde ÚNICAMENTE con el objeto JSON válido, sin texto adicional.`;
           verifiedImage: verifiedImageUrl
         };
 
-        console.log('Item creado:', newItem); // DEBUG: verificar que el barcode esté en el item
-
         setCurrentAnalysis(newItem);
         setShowConfirmModal(true);
 
         const newCredits = { ...credits, used: credits.used + 1 };
-        saveCredits(newCredits);
+        await updateCredits(newCredits);
 
         if (newCredits.used === newCredits.total) {
           setTimeout(() => {
@@ -358,8 +510,13 @@ Responde ÚNICAMENTE con el objeto JSON válido, sin texto adicional.`;
     }
   };
 
-  const handleDelete = (id: string) => {
-    setItems(items.filter(item => item.id !== id));
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteItemFromDatabase(id);
+      setItems(items.filter(item => item.id !== id));
+    } catch (error) {
+      alert('Error al eliminar el producto');
+    }
   };
 
   const handleUpdateItem = (id: string, field: keyof InventoryItem, value: string | number) => {
@@ -371,19 +528,29 @@ Responde ÚNICAMENTE con el objeto JSON válido, sin texto adicional.`;
     }
   };
 
-  const handleConfirmItem = () => {
-    if (currentAnalysis) {
+  const handleConfirmItem = async () => {
+    if (!currentAnalysis) return;
+
+    try {
       const existingIndex = items.findIndex(i => i.id === currentAnalysis.id);
+      
       if (existingIndex >= 0) {
+        // Actualizar item existente
+        await updateItemInDatabase(currentAnalysis);
         setItems(items.map(item =>
           item.id === currentAnalysis.id ? currentAnalysis : item
         ));
       } else {
-        setItems([...items, currentAnalysis]);
+        // Crear nuevo item
+        await saveItemToDatabase(currentAnalysis);
+        setItems([currentAnalysis, ...items]);
       }
+
+      setShowConfirmModal(false);
+      setCurrentAnalysis(null);
+    } catch (error) {
+      alert('Error al guardar el producto');
     }
-    setShowConfirmModal(false);
-    setCurrentAnalysis(null);
   };
 
   const handleExport = () => {
@@ -442,15 +609,6 @@ Responde ÚNICAMENTE con el objeto JSON válido, sin texto adicional.`;
                   <div className="text-xs text-neutral-500">{credits.isRegistered ? 'Registrado' : 'Prueba'}</div>
                 </div>
               </div>
-
-              {!credits.isRegistered && (
-                <button
-                  onClick={() => { setUpgradeType('register'); setShowUpgradeModal(true); }}
-                  className="px-4 py-2 bg-black text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors flex items-center gap-2"
-                >
-                  <Crown className="w-4 h-4" />Registrar +5
-                </button>
-              )}
             </div>
           </div>
 
@@ -462,14 +620,12 @@ Responde ÚNICAMENTE con el objeto JSON válido, sin texto adicional.`;
                 <AlertCircle className="w-8 h-8 text-neutral-600" />
               </div>
               <h3 className="text-xl font-bold text-neutral-900 mb-2">Límite alcanzado</h3>
-              <p className="text-neutral-600 mb-4">
-                {credits.isRegistered ? 'Contáctanos para análisis ilimitados' : 'Regístrate para +5 análisis'}
-              </p>
+              <p className="text-neutral-600 mb-4">Contáctanos para análisis ilimitados</p>
               <button
-                onClick={() => { setUpgradeType(credits.isRegistered ? 'upgrade' : 'register'); setShowUpgradeModal(true); }}
+                onClick={() => { setUpgradeType('upgrade'); setShowUpgradeModal(true); }}
                 className="px-6 py-3 bg-black text-white rounded-xl font-medium hover:bg-neutral-800 transition-colors"
               >
-                {credits.isRegistered ? 'Contactar' : 'Registrar'}
+                Contactar
               </button>
             </div>
           )}

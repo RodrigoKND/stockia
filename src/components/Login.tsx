@@ -1,11 +1,24 @@
 import { Camera } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export default function LoginPage() {
-  const handleGoogleLogin = () => {
-    // Aquí iría la lógica de autenticación con Google
-    // Por ejemplo usando Firebase Auth o tu provider preferido
-    console.log('Iniciando sesión con Google...');
-    // window.location.href = '/api/auth/google';
+  const handleGoogleLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
+      });
+
+      if (error) {
+        console.error('Error al iniciar sesión:', error.message);
+        alert('Error al iniciar sesión con Google');
+      }
+    } catch (error) {
+      console.error('Error inesperado:', error);
+      alert('Error inesperado al iniciar sesión');
+    }
   };
 
   return (
