@@ -1,28 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { MessageCircle, X, Send } from 'lucide-react';
-import { InventoryItem } from './Dashboard';
-import { decodeShareToken } from '../utils/shareableLink';
-
-interface Message {
-  id: string;
-  text: string;
-  sender: 'user' | 'seller';
-  timestamp: Date;
-}
+// import { useParams } from 'react-router-dom';
+// import { decodeShareToken } from '../utils/shareableLink';
 
 export default function SharedView() {
-  const { token } = useParams<{ token: string }>();
-  const productIds = token ? decodeShareToken(token) : [];
+  // const { token } = useParams<{ token: string }>();
   
-  // Simulated config (vendría del backend)
   const sellerConfig = {
     name: 'Sofia',
     avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop',
     welcomeMessage: 'Hola, bienvenido a nuestra tienda. ¿En qué puedo ayudarte hoy?',
     catalogTitle: 'Colección Premium',
     catalogDescription: 'Productos seleccionados con cuidado para ti',
-    behavior: 'friendly' as const,
+    behavior: 'friendly',
     phoneNumber: '+59112345678',
     adaptToUser: true,
   };
@@ -32,90 +20,10 @@ export default function SharedView() {
     quantity: true,
   };
   
-  const sharedProducts: InventoryItem[] = [
+  const sharedProducts = [
     { id: '1', imageUrl: 'https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=800', productName: 'Nike Air Max 90', category: 'Footwear', quantity: 12, confidence: 98 },
-    { id: '2', imageUrl: 'https://images.pexels.com/photos/6069122/pexels-photo-6069122.jpeg?auto=compress&cs=tinysrgb&w=800', productName: 'Ceramic Coffee Mug', category: 'Kitchen', quantity: 45, confidence: 85 },
     { id: '3', imageUrl: 'https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&w=800', productName: 'Sony Alpha a7 III', category: 'Electronics', quantity: 3, confidence: 99 },
-  ].filter(item => productIds.includes(item.id));
-
-  const [showGenderModal, setShowGenderModal] = useState(true);
-  const [userGender, setUserGender] = useState<'male' | 'female' | 'no-say' | null>(null);
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [showChat, setShowChat] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputMessage, setInputMessage] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-
-  useEffect(() => {
-    if (userGender && sellerConfig.adaptToUser) {
-      setShowWelcome(true);
-    }
-  }, [userGender]);
-
-  const handleGenderSelect = (gender: 'male' | 'female' | 'no-say') => {
-    setUserGender(gender);
-    setShowGenderModal(false);
-  };
-
-  const getPersonalizedGreeting = () => {
-    if (!sellerConfig.adaptToUser || userGender === 'no-say') {
-      return sellerConfig.welcomeMessage;
-    }
-    
-    if (userGender === 'male') {
-      return 'Hola, bienvenido. Estoy aquí para ayudarte a encontrar exactamente lo que buscas.';
-    } else {
-      return 'Hola, bienvenida. Me encantaría ayudarte a encontrar algo perfecto para ti.';
-    }
-  };
-
-  const getSellerResponse = (userMessage: string): string => {
-    const lowerMessage = userMessage.toLowerCase();
-    
-    if (lowerMessage.includes('precio') || lowerMessage.includes('cuesta')) {
-      return 'Con gusto te puedo ayudar con información de precios. ¿Cuál producto te interesa?';
-    }
-    
-    if (lowerMessage.includes('disponible') || lowerMessage.includes('stock')) {
-      return 'Todos los productos que ves aquí están disponibles. ¿Te gustaría saber sobre alguno en particular?';
-    }
-    
-    if (lowerMessage.includes('envío') || lowerMessage.includes('entrega')) {
-      return 'Tenemos envíos rápidos y seguros. El tiempo varía según tu ubicación. ¿Dónde te encuentras?';
-    }
-    
-    if (lowerMessage.includes('gracias')) {
-      return 'Con mucho gusto. Estoy aquí para lo que necesites.';
-    }
-    
-    return 'Interesante. ¿Podrías darme más detalles? Así puedo ayudarte mejor.';
-  };
-
-  const handleSendMessage = () => {
-    if (!inputMessage.trim()) return;
-
-    const userMsg: Message = {
-      id: Date.now().toString(),
-      text: inputMessage,
-      sender: 'user',
-      timestamp: new Date(),
-    };
-
-    setMessages(prev => [...prev, userMsg]);
-    setInputMessage('');
-    setIsTyping(true);
-
-    setTimeout(() => {
-      const sellerMsg: Message = {
-        id: (Date.now() + 1).toString(),
-        text: getSellerResponse(inputMessage),
-        sender: 'seller',
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, sellerMsg]);
-      setIsTyping(false);
-    }, 1200);
-  };
+  ];
 
   const handleWhatsAppContact = (productName: string) => {
     const message = `Hola, me interesa el producto: ${productName}. ¿Podrías darme más información?`;
@@ -208,202 +116,6 @@ export default function SharedView() {
           </div>
         )}
       </main>
-
-      {/* Gender Selection Modal */}
-      {showGenderModal && sellerConfig.adaptToUser && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center">
-            <div className="mb-6">
-              <img
-                src={sellerConfig.avatarUrl}
-                alt={sellerConfig.name}
-                className="w-20 h-20 rounded-full mx-auto mb-4 object-cover"
-              />
-              <h2 className="text-2xl font-bold text-neutral-900 mb-2">
-                Personaliza tu experiencia
-              </h2>
-              <p className="text-neutral-600 text-sm">
-                Para ofrecerte mejor atención, ¿cómo te identificas?
-              </p>
-            </div>
-            
-            <div className="space-y-3">
-              <button
-                onClick={() => handleGenderSelect('male')}
-                className="w-full py-4 bg-neutral-100 hover:bg-neutral-200 rounded-xl font-medium text-neutral-900 transition-colors"
-              >
-                Masculino
-              </button>
-              <button
-                onClick={() => handleGenderSelect('female')}
-                className="w-full py-4 bg-neutral-100 hover:bg-neutral-200 rounded-xl font-medium text-neutral-900 transition-colors"
-              >
-                Femenino
-              </button>
-              <button
-                onClick={() => handleGenderSelect('no-say')}
-                className="w-full py-4 bg-neutral-100 hover:bg-neutral-200 rounded-xl font-medium text-neutral-900 transition-colors"
-              >
-                Prefiero no decirlo
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Welcome Dialog */}
-      {showWelcome && !showGenderModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
-            <div className="p-8 text-center">
-              <img
-                src={sellerConfig.avatarUrl}
-                alt={sellerConfig.name}
-                className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-neutral-100"
-              />
-              
-              <div className="bg-neutral-50 rounded-2xl p-6 mb-6">
-                <h3 className="text-xl font-bold text-neutral-900 mb-2">
-                  {sellerConfig.name}
-                </h3>
-                <p className="text-neutral-700 leading-relaxed">
-                  {getPersonalizedGreeting()}
-                </p>
-              </div>
-
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowWelcome(false)}
-                  className="flex-1 px-6 py-3 bg-neutral-100 text-neutral-700 rounded-xl hover:bg-neutral-200 transition-colors font-medium"
-                >
-                  Continuar
-                </button>
-                <button
-                  onClick={() => {
-                    setShowWelcome(false);
-                    setShowChat(true);
-                  }}
-                  className="flex-1 px-6 py-3 bg-black text-white rounded-xl hover:bg-neutral-800 transition-colors font-medium flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  Chatear
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Chat Widget */}
-      {showChat && (
-        <div className="fixed bottom-6 right-6 w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 border border-neutral-200">
-          {/* Chat Header */}
-          <div className="bg-black text-white px-6 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <img
-                src={sellerConfig.avatarUrl}
-                alt={sellerConfig.name}
-                className="w-10 h-10 rounded-full object-cover"
-              />
-              <div>
-                <div className="font-semibold">{sellerConfig.name}</div>
-                <div className="text-xs text-neutral-400">En línea</div>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowChat(false)}
-              className="text-white/70 hover:text-white transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-neutral-50">
-            {/* Initial greeting */}
-            <div className="flex gap-3">
-              <img
-                src={sellerConfig.avatarUrl}
-                alt={sellerConfig.name}
-                className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-              />
-              <div className="bg-white rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-[80%]">
-                <p className="text-sm text-neutral-800">{getPersonalizedGreeting()}</p>
-              </div>
-            </div>
-
-            {messages.map((message) => (
-              <div key={message.id} className={`flex gap-3 ${message.sender === 'user' ? 'flex-row-reverse' : ''}`}>
-                {message.sender === 'seller' && (
-                  <img
-                    src={sellerConfig.avatarUrl}
-                    alt={sellerConfig.name}
-                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-                  />
-                )}
-                <div
-                  className={`rounded-2xl px-4 py-3 shadow-sm max-w-[80%] ${
-                    message.sender === 'user'
-                      ? 'bg-black text-white rounded-tr-none'
-                      : 'bg-white text-neutral-800 rounded-tl-none'
-                  }`}
-                >
-                  <p className="text-sm">{message.text}</p>
-                </div>
-              </div>
-            ))}
-
-            {isTyping && (
-              <div className="flex gap-3">
-                <img
-                  src={sellerConfig.avatarUrl}
-                  alt={sellerConfig.name}
-                  className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-                />
-                <div className="bg-white rounded-2xl rounded-tl-none px-4 py-3 shadow-sm">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-neutral-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-2 h-2 bg-neutral-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-2 h-2 bg-neutral-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Input Area */}
-          <div className="border-t border-neutral-200 p-4 bg-white">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Escribe tu mensaje..."
-                className="flex-1 px-4 py-3 bg-neutral-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm"
-              />
-              <button
-                onClick={handleSendMessage}
-                disabled={!inputMessage.trim()}
-                className="px-4 py-3 bg-black text-white rounded-xl hover:bg-neutral-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Send className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Floating Chat Button */}
-      {!showChat && !showWelcome && !showGenderModal && (
-        <button
-          onClick={() => setShowChat(true)}
-          className="fixed bottom-6 right-6 w-16 h-16 bg-black text-white rounded-full shadow-2xl hover:scale-110 transition-all flex items-center justify-center z-40"
-        >
-          <MessageCircle className="w-7 h-7" />
-          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-        </button>
-      )}
     </div>
   );
 }

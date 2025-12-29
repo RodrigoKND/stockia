@@ -51,9 +51,9 @@ export default function Sidebar() {
     <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6 border-b border-gray-200">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <Camera className="w-5 h-5 text-white" />
-          </div>
+           <div className="w-9 h-9 bg-black rounded-xl flex items-center justify-center">
+              <Camera className="w-5 h-5 text-white" />
+            </div>
           <div className="text-left">
             <div className="text-lg font-semibold text-gray-900">STOCKIA</div>
             <div className="text-xs text-gray-500">Inventory Manager</div>
@@ -71,7 +71,7 @@ export default function Sidebar() {
           }`}
         >
           <LayoutDashboard className="w-5 h-5" />
-          Dashboard
+          Panel de Control
         </Link>
         <Link
           to="/published"
@@ -82,7 +82,7 @@ export default function Sidebar() {
           }`}
         >
           <Users className="w-5 h-5" />
-          Published Products
+          Compartir Catálogo
         </Link>
       </nav>
 

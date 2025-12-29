@@ -17,7 +17,6 @@ interface VisibleAttributes {
 
 export const generateShareableLink = (
   productIds: string[],
-  sellerConfig?: VirtualSellerConfig,
   visibleAttributes?: VisibleAttributes
 ) => {
   const baseUrl = window.location.origin;

@@ -3,6 +3,7 @@ import { Download, Sparkles, X, AlertCircle, Crown, Edit2, Trash2 } from 'lucide
 import Sidebar from './Sidebar';
 import UploadArea from './UploadArea';
 import { supabase } from '../lib/supabase';
+import * as XLSX from 'xlsx';
 
 export interface InventoryItem {
   id: string;
@@ -245,7 +246,7 @@ export default function Dashboard() {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
     if (!apiKey) {
-      throw new Error('API Key de Gemini no configurada');
+      throw new Error('Error al analizar el producto');
     }
 
     const parts: any[] = [{ text: prompt }];
@@ -283,7 +284,6 @@ export default function Dashboard() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Error de Gemini API:', errorData);
         throw new Error(`Error ${response.status}: ${errorData.error?.message || 'Error desconocido'}`);
       }
 
@@ -297,13 +297,11 @@ export default function Dashboard() {
 
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (!jsonMatch) {
-        console.error('Respuesta de Gemini sin JSON:', text);
         throw new Error('Respuesta inválida de la IA');
       }
 
       return JSON.parse(jsonMatch[0]);
     } catch (error) {
-      console.error('Error al analizar con Gemini:', error);
       throw error;
     }
   };
@@ -533,7 +531,7 @@ Responde ÚNICAMENTE con el objeto JSON válido, sin texto adicional.`;
 
     try {
       const existingIndex = items.findIndex(i => i.id === currentAnalysis.id);
-      
+
       if (existingIndex >= 0) {
         // Actualizar item existente
         await updateItemInDatabase(currentAnalysis);
@@ -554,33 +552,30 @@ Responde ÚNICAMENTE con el objeto JSON válido, sin texto adicional.`;
   };
 
   const handleExport = () => {
-    const csv = [
-      ['Producto', 'Marca', 'Código', 'Precio', 'Categoría', 'Cantidad', 'Descripción', 'Características', 'Mercado', 'Uso', 'Confianza'],
-      ...items.map(item => [
-        item.productName,
-        item.brand,
-        item.barcode,
-        item.price,
-        item.category,
-        item.quantity,
-        item.description,
-        item.characteristics,
-        item.targetMarket,
-        item.usage,
-        `${item.confidence}%`
-      ])
-    ].map(row => row.join(',')).join('\n');
+    const data = items.map(item => ({
+      Producto: item.productName,
+      Marca: item.brand,
+      'Código de Barras': item.barcode,
+      Precio: item.price,
+      Categoría: item.category,
+      Cantidad: item.quantity,
+      Descripción: item.description,
+      Características: item.characteristics,
+      Mercado: item.targetMarket,
+      Uso: item.usage,
+      Confianza: `${item.confidence}%`
+    }));
 
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'inventory.csv';
-    link.click();
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Inventario');
+
+    // Generar archivo Excel y descargar
+    XLSX.writeFile(wb, 'inventario.xlsx');
   };
 
   const handleContactSales = () => {
-    window.location.href = 'mailto:rodrigopacheco965@gmail.com?subject=Interested in Stockia Premium';
+    window.location.href = 'mailto:rodrigopacheco965@gmail.com?subject=Interested in Stockia, i want a demo please';
   };
 
   const remainingCredits = credits.total - credits.used;
@@ -650,7 +645,7 @@ Responde ÚNICAMENTE con el objeto JSON válido, sin texto adicional.`;
                   onClick={handleExport}
                   className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-neutral-800 transition-colors"
                 >
-                  <Download className="w-4 h-4" />Exportar CSV
+                  <Download className="w-4 h-4" />Exportar
                 </button>
               </div>
               <div className="overflow-x-auto">
